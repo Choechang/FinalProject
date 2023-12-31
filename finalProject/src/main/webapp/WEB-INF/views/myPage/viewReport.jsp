@@ -1,0 +1,295 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="././resources/css/myPgae.css">
+	
+<style>
+	.p-btn {
+		display: inline-block;
+		margin: 0 auto;
+		padding: 10px 11px;
+		font-size: 14px;
+		background: rgba(255, 255, 255, 0.22);
+		border-radius: 8px;
+		cursor: pointer;
+		letter-spacing: -2px;
+		font-weight: bolder;
+	}
+	.p-btn1 {
+		display: inline-block;
+		margin: 0 auto;
+		padding: 10px 11px;
+		font-size: 14px;
+		background: rgba(255, 255, 255, 0);
+		border-radius: 8px;
+		cursor: pointer;
+		letter-spacing: -2px;
+		font-weight: bolder;
+	}
+	p::after{
+		display:block;
+		content: '';
+		border-bottom: solid 2px #ffffff;  
+		transform: scaleX(0);  
+		transition: transform 250ms ease-in-out;
+	}
+	p:hover::after{
+		transform: scaleX(1);
+	}
+	.user-info{
+		display: flex;
+		align-items: center;
+		margin-bottom: 40px;
+		margin-top: 0px;
+		flex-direction: column;
+		justify-content: space-evenly;
+		margin-left: 0px;
+	}
+	.pageBox{
+		border-radius: 13px;
+		border: 1px solid rgba(226, 226, 226, 0.4);
+		padding: 15px;
+		margin-bottom: 100px;
+		position: relative;
+	}
+	.top-center{
+		margin-bottom: -15px;
+	}
+	.req-outer{
+		border: 1px solid rgba(96, 96, 96, 0.5);
+		border-radius: 10px;
+		width: 96%;
+		margin-top: 10px;
+		height: 150px;
+		padding-left: 15px;
+		padding-top: 10px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+	.req-desc{
+		font-size: 12px;
+		margin-top: 20px;
+	}
+	.req-text{
+		display: flex;
+		flex-direction: column;
+	}
+	.req-info{
+		display: flex;
+		align-items: flex-end;
+		flex-direction: column;
+		margin-right: 10px;
+	}
+	.req-align{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	.req-no{
+		font-size: 12px;
+	}
+	.req-id{
+		font-size: 14px;
+	}
+	.req-answer-btn{
+		background: rgb(218, 76, 60);
+		border: none;
+		width: 100px;
+		height: 30px;
+		border-radius: 4px;
+		color: white;
+		margin-right: 5px;
+		cursor: pointer;
+		font-size: 13px;
+	}
+	.req-detail-btn{
+		background: rgb(0, 199, 174);
+		border: none;
+		width: 100px;
+		height: 30px;
+		border-radius: 4px;
+		color: white;
+		cursor: pointer;
+		font-size: 13px;
+	}
+	.req-btn-area{
+		display: flex;
+		justify-content: end;
+		margin-right: 10px;
+		margin-bottom: 10px;
+	}
+	.close-btn{
+		width: 10px;
+		position: absolute;
+		right: 12px;
+		top: 11px;
+		cursor: pointer;
+	}
+	.req-title{
+		font-weight: bold;
+	}
+
+	#reportBtn{
+		background: rgb(0, 199, 174);
+		border: none;
+		width: 100px;
+		height: 30px;
+		border-radius: 4px;
+		color: white;
+		cursor: pointer;
+		font-size: 13px;
+		margin-left: 84%;
+    	padding-block: 5px;
+	}
+	
+	.reqListOuter{
+		border: 1px solid rgba(96, 96, 96, 0.5);
+		border-radius: 10px;
+		width: 96%;
+		height: 150px;
+	}
+</style>
+</head>
+<body>
+	<jsp:include page="../common/header.jsp" />
+	<div class="box" style="margin-top: 120px">
+		<div class="sideBar">
+			<h3 style="margin: 10px 0 0 0; font-weight: bold;">계정 설정</h3>
+			<hr style="color: white; border: 0px; height: 3px; background: white; max-width: 180px;">
+		
+			<a class="myPageSideBar" href="userInfo.me">나의 정보</a>
+			<a class="myPageSideBar" href="proInfo.me">전문가 정보</a>
+			<a class="myPageSideBar" href="changePwd.me">비밀번호 변경</a>
+			<a class="myPageSideBar" href="deleteForm.me">회원 탈퇴</a>
+			<a class="myPageSideBar" href="schedule.me">요청 관리</a>
+			<a class="myPageSideBar" href="ask.me">문의 내역</a>
+			<c:if test="${loginUser != null && loginUser.memberName == '관리자'}">
+				<a class="myPageSideBar" href="careMem.me">회원 관리</a>
+                <a class="myPageSideBar" href="reportList.rp" style="font-weight: bolder;
+				background-color: rgba(255, 255, 255, 0.22); border-radius: 8px; width: max-content; padding: 10px;">신고 내역</a>
+			</c:if>        
+		</div>
+		<div class="main-box">
+			<h3 style="margin: 10px 0 0 20px;">문의 내역</h3>
+			<br>
+			<div class="top-center"
+				style="display: flex; justify-content: space-around; margin-left: 20px; margin-right: 20px">
+				<!-- 호버되면 밑줄 만들어주세요 ㅋㅋ -->
+				<div>
+					<p class="p-btn" id="from" onclick="from()">등록된 신고</p>
+				</div>
+				<div>
+					<p class="p-btn1" id="send" onclick="send2()">처리된 신고</p>
+				</div>
+			</div>
+			<div class="pageBox" style="display: flex; flex-direction: column;">
+				<div class="user-info">
+					<c:forEach var="r" items="${list}">
+						<div class="req-outer">
+							<div class="req-align">
+							
+								<div class="req-text">
+									<h6 class="req-title">${r.reportTitle}</h6>
+									<div class="req-desc">
+										${r.reportContent}
+									</div>
+								</div>
+								<div class="req-info">
+									<div class="req-no">${r.reportNo}</div>
+									<div class="req-no">${r.createDate}</div>
+									<div class="req-id">${r.memberName}</div>
+								</div>
+							</div>
+							<div class="req-btn-area">
+								<button class="req-detail-btn" type="button" onclick="reportDetail(${r.reportNo})">상세보기</button>
+							</div>
+						</div>
+					</c:forEach>	
+				
+				</div>
+				<c:forEach var="r" items="${list}">
+					<form method="post" action="reportComment.rp">
+					
+						<div class="view${r.reportNo}" style="display: none;">
+							<div class="reqListOuter">
+								<div><h6>${r.reportTitle}</h6></div>
+								<div>${r.reportContent}</div>
+								<div>${r.createDate}</div>
+								<div>${r.memberName}</div>
+								<div>${r.reportNo}</div>
+								<div>${r.memberNo}</div>
+								<input type="hidden" name="reportNo" value="${r.reportNo}">
+								<input type="text" name="adminComent" style="width: 60%;">
+								<button type="submit" id="reportBtn">답변하기</button>
+							</div>
+							
+						</div>
+					</form>
+				</c:forEach>
+				<div class="tee" style="display: none;">
+				<c:forEach var="er" items="${endlist}">
+						<div class="req-outerA">
+							<div class="req-alignA">
+							
+								<div class="req-textA">
+									<h6 class="req-titleA">${er.reportTitle}</h6>
+									<div class="req-descA">
+										${er.reportContent}
+									</div>
+								</div>
+								<div class="req-infoA">
+									<div class="req-noA">${er.reportNo}</div>
+									<div class="req-noA">${er.createDate}</div>
+									<div class="req-idA">${er.memberName}</div>
+								</div>
+							</div>
+							<div>
+								제출한 답변
+								<input type="text" value="${er.adminComent}" readonly>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+
+			</div>	 
+			</div>		
+		</div>
+
+	
+	<jsp:include page="../common/footer.jsp" />
+
+	<script>
+		
+		function reportDetail(res){
+			console.log(res)
+			const reportInfo = document.querySelector('.user-info');
+			reportInfo.style.display = "none";
+
+			const reportNum = document.querySelector('.view'+res);
+			console.log(reportNum)
+			reportNum.style.display = "flex";
+		}
+		
+		function reportPostBtn(num) {
+			if(num === 1) {
+				$("#form").attr('action','reportComment.rp');
+			}
+			$("#form").submit();
+		}
+
+		function send2(){
+			const reportInfo = document.querySelector('.user-info');
+			reportInfo.style.display = "none";
+
+			const tee = document.querySelector('.tee');
+			tee.style.display = "flex";
+		}
+	</script>
+</body>
+</html>
