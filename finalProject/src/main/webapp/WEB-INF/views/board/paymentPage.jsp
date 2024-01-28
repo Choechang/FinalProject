@@ -108,8 +108,9 @@
 						<label for="agree" style="font-weight: bold;">구매 조건 확인 및 결제진행에 동의</label>
 					</div>
 					<form action="">
-						<input style="display: ;" id="price" value="${b.price}">
-						<input style="display: ;" id="price" value="${loginUser.memberNo}">
+						<input style="display: ;" id="price" value="${b.price}" readonly="readonly">
+						<input style="display: ;" id="memberNo" value="${loginUser.memberNo}" readonly="readonly">
+						<input style="display: ;" id="b.boardNo" value="${b.boardNo}" readonly="readonly">
 						<!-- 
 							로그인 유저의 포인트에서 가격만큼 차감하고 차감이 성공된다면(결제 성공)
 							유저가 결제한 게시글 + 그글을쓴 글쓴이 에게 요청 전송
