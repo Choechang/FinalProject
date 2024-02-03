@@ -209,4 +209,6 @@ public interface BoardService {
 	ArrayList<Report> selectEndReport();
 	
 	int deleteAttachment(int boardNo);
+	
+	int deductPoint(int price, int memberNo);
 }

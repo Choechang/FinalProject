@@ -1070,4 +1070,10 @@
 		 WHERE R.STATUS = 'N'		
 	</select>
 	
+	<update id="deductPoint">
+		UPDATE MEMBER
+    		SET account = account - #{price}
+		WHERE MEM_NO = #{memberNo}
+	</update>
+	
   </mapper>

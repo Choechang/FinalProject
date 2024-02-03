@@ -26,6 +26,7 @@ import com.kh.finalProject.common.vo.Category;
 import com.kh.finalProject.common.vo.Notice;
 import com.kh.finalProject.common.vo.PageInfo;
 import com.kh.finalProject.common.vo.Report;
+import com.kh.finalProject.member.model.service.MemberService;
 
 @Controller
 public class BoardController {
@@ -889,6 +890,24 @@ public class BoardController {
 	@RequestMapping(value = "paymentPage.pay")
 	public String paymentPage() {
 		return "board/paymentPage";
+	}
+	
+	@RequestMapping(value = "productPay.bo")
+	public String productPay(int price, int memberNo, int boardNo, HttpSession session) {
+		int result = boardService.deductPoint(price, memberNo);
+		
+		if(result > 0) {
+			//차감 성공
+			Board b = boardService.selectBoard(boardNo);
+			b.getMemberNo(); // <- 글쓴이에게 요청 들어가게 해야함 
+			return "";
+		}else {
+			//차감 실패
+			session.setAttribute("alertMsg", "잔액이 부족합니다.");
+			return "redirect:/userInfo.me";
+		}
+		
+		
 	}
 	
 //	스크립트 기능 후 가진 정보 보내주는 기능 

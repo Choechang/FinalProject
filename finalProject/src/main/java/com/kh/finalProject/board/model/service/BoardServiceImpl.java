@@ -448,6 +448,11 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.deleteAttachment(sqlSession, boardNo);
 	}
 
+	@Override
+	public int deductPoint(int price, int memberNo) {
+		return boardDao.deductPoint(sqlSession, price, memberNo);
+	}
+
 	
 
 

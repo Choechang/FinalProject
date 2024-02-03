@@ -1,6 +1,8 @@
 package com.kh.finalProject.board.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -359,5 +361,12 @@ public class BoardDao {
 	
 	public int deleteAttachment(SqlSessionTemplate sqlSession, int boardNo) {
 		return sqlSession.update("boardMapper.deleteAttachment", boardNo);
+	}
+	
+	public int deductPoint(SqlSessionTemplate sqlSession, int price, int memberNo) {
+		Map<String, Integer> tmp = new HashMap();
+		tmp.put("price", price);
+		tmp.put("memberNo", memberNo);
+		return sqlSession.update("boardMapper.deductPoint", tmp);
 	}
 }
