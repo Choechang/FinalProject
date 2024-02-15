@@ -510,7 +510,7 @@ public class BoardController {
 			return "noticeBoard/noticeDetailView";
 		}else { //실패
 			return "common/errorMsg";
-		}
+		}	
 		
 	}
 	

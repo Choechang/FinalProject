@@ -390,8 +390,6 @@
         	});
         }
 
-     
-        
         function increaseReplyLikey(replyNo){
         	const boardNo = document.getElementById("reply-boardNo").value;
         	const memberNo = document.getElementById("WriterNo").value;
@@ -527,7 +525,6 @@
                 }
             });
         }
-        
       //댓글 리스트 그리기
         function selectReplyList() {
             $.ajax({
@@ -541,7 +538,6 @@
                     for (let reply of res) {
                         console.log(reply);
                         str += 
-                      
                             "<div class=\"reply-align\" id=\"reply-align\">" +
                             "<div class=\"profile-area\">" +
                             "<img style=\"width: 45px; height: 45px; margin: 5px; border-radius: 15px;\" src="+ reply.filePath +">" +
@@ -555,11 +551,7 @@
                                     "삭제하기" + 
                                    "</button>";
                             }
-        
-                            str += "</div>" +					               
-                            "<div>" +
-                            "일러스트 디자인+8개서비스 고수" +
-                            "</div>" +
+                            str += "</div>" +					                     
                             "<button class=\"req-btn\">견적요청</button>" +
                             "</div>" +
                             "<div class=\"reply-cont\">" +
@@ -570,10 +562,7 @@
                         "<button class= \"reply-likey-btn\" onclick= \"insertReplyLikey("+reply.replyNo+")\">"+
                         "<img src=\"./resources/icon/LIKE.png\" class=\"img\" style=\"margin-bottom: 10px;\">" +
                         "<span id=\"relikeyNum"+reply.replyNo+"\" class=\"relikeyNum\">"+ reply.reLikeyCount + "</span>" +
-                        "</button>"+      
-                        "<span>·</span>"+
-                        "<img src=\"./resources/icon/dislike.png\" class=\"img\" style=\"margin-top: 7px;\">" +
-                        "<span>싫어요 -5</span>" +
+                        "</button>"+                        	
                         "</div>" +
                         "</div>" +
                         "<input name = \"replyNo\" id=\"replyNo\" type=\"hidden\" value=\"${reply.replyNo}\">"+
