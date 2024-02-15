@@ -964,11 +964,6 @@
 		WHERE BOARD_NO = #{boardNo}
 	</update>
 	
-	
-	
-	
-	
-	
 	<insert id="insertReplyLikey">
 		INSERT INTO REPLY_LIKEY (RELIKEY_NO, REPLY_NO, BOARD_NO, MEM_NO)
 	   	SELECT SEQ_RLNO.NEXTVAL, #{replyNo}, #{boardNo}, #{memberNo}

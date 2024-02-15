@@ -35,7 +35,7 @@ public class LikeyController {
 				Map<String, Object> map = new HashMap<>();
 				l = boardService.selectLikey(l);
 				if(l == null) {
-					System.out.println("null이다 씨발");
+					System.out.println("null값");
 				}
 				
 				if(result1 > 0) {
@@ -77,45 +77,43 @@ public class LikeyController {
 
 	}
 
-	
-		
 		//REPLY좋아요 insert
 		@ResponseBody
 		@RequestMapping(value="insertReply.li")
-			public String likeyInsertBoard(ReLikey r,  HttpServletResponse response ) throws IOException {
+		public String likeyInsertBoard(ReLikey r,  HttpServletResponse response ) throws IOException {
 					
 			int result1 = boardService.insertReplyLikey(r);
-				int result2 = 0;
-				int result3 = 0;
-				System.out.println("result1 : " + result1);
-				Map<String, Object> map = new HashMap<>();
-				r = boardService.selectReplyLikey(r);
-				if(r == null) {
-					System.out.println("null이다");
+			int result2 = 0;
+			int result3 = 0;
+			System.out.println("result1 : " + result1);
+			Map<String, Object> map = new HashMap<>();
+			r = boardService.selectReplyLikey(r);
+			if(r == null) {
+				System.out.println("null이다");
+			}
+			
+			if(result1 > 0) {
+				map.put("result1", result1);
+			} else {
+				if(r.getReliStatus().equals("N")) {
+					result2 = boardService.updateYReplyLikey(r);
+					Reply likeyCount = boardService.selectReplyLikeyCount(r);
+					likeyCount.getReLikeyCount();
+					System.out.println("댓글 좋아요 likeyCount :   " + likeyCount);
+					map.put("result2", result2);	
+					map.put("likeyCount", likeyCount.getReLikeyCount());
 				}
-				
-				if(result1 > 0) {
-					map.put("result1", result1);
-				} else {
-					if(r.getReliStatus().equals("N")) {
-						result2 = boardService.updateYReplyLikey(r);
-						Reply likeyCount = boardService.selectReplyLikeyCount(r);
-						likeyCount.getReLikeyCount();
-						System.out.println("댓글 좋아요 likeyCount :   " + likeyCount);
-						map.put("result2", result2);	
-						map.put("likeyCount", likeyCount.getReLikeyCount());
-					}
-					else {
-						result3 = boardService.updateNReplyLikey(r);
-						Reply likeyCount = boardService.selectReplyLikeyCount(r);
-						map.put("result3", result3);
-						map.put("likeyCount", likeyCount.getReLikeyCount());
-					}			
-				}
+				else {
+					result3 = boardService.updateNReplyLikey(r);
+					Reply likeyCount = boardService.selectReplyLikeyCount(r);
+					map.put("result3", result3);
+					map.put("likeyCount", likeyCount.getReLikeyCount());
+				}			
+			}
 			return new Gson().toJson(map);
 		}
-		
-		
+
+	
 		@RequestMapping(value="increaseReply.li")
 		@ResponseBody
 		public String replyLikeyIncrease(ReLikey r, HttpServletResponse response) throws IOException {
