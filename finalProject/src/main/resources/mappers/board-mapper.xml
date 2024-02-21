@@ -1,0 +1,1073 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="boardMapper">
+  	<resultMap type="Board" id="boardResult">
+  		<result column="BOARD_NO" property="boardNo" />
+  		<result column="BOARD_TITLE" property="boardTitle" />
+  		<result column="BOARD_CONTENT" property="boardContent" />
+  		<result column="PRICE" property="price" />
+  		<result column="BOARD_TYPE" property="boardType" />
+  		<result column="CREATEDATE" property="createDate" />
+  		<result column="STATUS" property="status" />
+  		<result column="MEM_NO" property="memberNo" />
+  		<result column="CATEGORY_NO" property="categoryNo" />
+  		<result column="MEM_NAME" property="memberName" />
+  		<result column="LOCATION" property="location" />
+  		<result column="FILE_PATH" property="filePath" />
+  		<result column="CHANGE_NAME" property="changeName" />
+  		<result column="LIKEY_COUNT" property="likeyCount" />
+  		<result column="LISTATUS" property="liStatus" />
+  		<result column="VIEW_COUNT" property="viewCount" />
+  		<result column="ORIGIN_NAME" property="originName" />
+  		<result column="CHANGE_NAME" property="changeName" />
+  		<result column="INTRO" property="intro" />
+  		<result column="SKILL_NO" property="skillNo" />
+  		<result column="PHONE" property="phone" />
+  		<result column="SKILL_NAME" property="skillName" />
+  		<result column="MEM_EMAIL" property="memberEmail" />
+  	</resultMap>
+  	
+  	<resultMap type="Attachment" id="attachmentResult">
+  		<result column="ATT_NO" property="attNo" />
+  		<result column="ORIGIN_NAME" property="originName" />
+  		<result column="CHANGE_NAME" property="changeName" />
+  		<result column="FILE_PATH" property="filePath" />
+  		<result column="STATUS" property="status" />
+  		<result column="BOARD_NO" property="boardNo" />
+  		<result column="FILE_LEVEL" property="fileLevel" />
+  	</resultMap>
+  	
+  	<resultMap type="Notice" id="noticeResult">
+  		<result column="NOTICE_NO" property="noticeNo" />
+  		<result column="NOTICE_TYPE" property="noticeType" />
+  		<result column="NOTICE_TITLE" property="noticeTitle" />
+  		<result column="NOTICE_CONTENT" property="noticeContent" />
+  		<result column="CREATEDATE" property="createDate" />
+  		<result column="STATUS" property="status" />
+  	</resultMap>
+  	
+  	<resultMap type="Reply" id="replyResult">
+  		<result column="REPLY_NO" property="replyNo" />
+  		<result column="REPLY_CONTENT" property="replyContent" />
+  		<result column="CREATEDATE" property="createDate" />
+  		<result column="MEM_NO" property="memberNo" />
+  		<result column="MEM_NAME" property="memberName" />
+  		<result column="BOARD_NO" property="boardNo" />
+  		<result column="STATUS" property="status" />
+  		<result column="RELIKEY_COUNT" property="reLikeyCount" />
+  		<result column="FILE_PATH" property="filePath" />
+  		
+  	</resultMap>
+  	
+  	<resultMap type="Likey" id="likeyResult">
+  		<result column="LIKEY_NO" property="likeyNo" />
+  		<result column="BOARD_NO" property="boardNo" />
+  		<result column="MEM_NO" property="memberNo" />
+  		<result column="LISTATUS" property="liStatus" />		
+  	</resultMap>
+  	<resultMap type="ReLikey" id="ReLikeyResult">
+  		<result column="RELIKEY_NO" property="relikeyNo" />
+  		<result column="BOARD_NO" property="boardNo" />
+  		<result column="MEM_NO" property="memberNo" />
+  		<result column="REPLY_NO" property="replyNo" />
+  		<result column="RE_LISTATUS" property="reliStatus" />		
+  	</resultMap>
+  	<resultMap type="Category" id="categoryResult">
+		<result column="CATEGORY_NO" property="categoryNo" />
+		<result column="CATEGORY_Name" property="categoryName" />
+  	</resultMap>
+  	
+  	<resultMap type="Report" id="reportResult">
+  		<result column="REPORT_NO" property="reportNo" />
+  		<result column="REPORT_TITLE" property="reportTitle" />
+  		<result column="REPORT_CONTENT" property="reportContent" />
+  		<result column="CREATEDATE" property="createDate" />
+  		<result column="MEM_NO" property="memberNo" />
+  		<result column="MEM_NAME" property="memberName" />
+  		<result column="ADMIN_COMENT" property="adminComent" />		
+  		<result column="STATUS" property="status" />
+  	</resultMap>
+  	
+ 	<!-- 도와줄게요 게시글 총 갯수 조회 -->
+ 	<select id="seleteHelpListCount" resultType="_int">
+ 		SELECT COUNT(*)
+ 		  FROM BOARD
+ 		 WHERE BOARD_TYPE = 1
+ 		AND STATUS = 'Y'
+ 	</select>
+ 	<!-- 도와줄게요 카테고리별 게시글 총 갯수 조회 -->
+ 	<select id="helpCategoryCount" resultType="_int">
+ 		SELECT COUNT(*)
+ 		  FROM BOARD
+ 		 WHERE BOARD_TYPE = 1
+ 		AND STATUS = 'Y'
+ 		AND CATEGORY_NO = #{categoryNo}	
+ 	</select>
+ 	<!-- 도와줄게요 게시글 전체 조회 -->
+ 	<select id="helpselectList" resultMap="boardResult">
+ 		SELECT  B.BOARD_NO,
+ 			  	B.BOARD_TITLE,
+ 			   	B.PRICE,
+ 			   	A.FILE_PATH,
+               	A.CHANGE_NAME
+ 		FROM BOARD B
+        JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+ 		 WHERE B.BOARD_TYPE = 1
+         AND B.STATUS = 'Y'
+         AND A.FILE_LEVEL =1
+         AND A.STATUS = 'Y'
+         ORDER BY CREATEDATE DESC
+ 	</select>
+ 	<!-- 도와줄게요 카테고리별 조회 -->
+ 	<select id="helpCategoryList" resultMap="boardResult">
+ 		SELECT  B.BOARD_NO,
+ 			  	B.BOARD_TITLE,
+ 			   	B.PRICE,
+ 			   	A.FILE_PATH,
+               	A.CHANGE_NAME
+ 		FROM BOARD B
+        JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+ 		 WHERE B.BOARD_TYPE = 1
+         AND B.STATUS = 'Y'
+         AND A.FILE_LEVEL =1
+         AND A.STATUS = 'Y'
+         AND B.CATEGORY_NO = #{categoryNo}
+ 	</select>
+ 	
+ 	<!-- 도와줄게요 게시글 상세조회 관련 쿼리문 -->
+	<select id="helpSelectBoard" resultMap="boardResult">
+		SELECT B.BOARD_NO,
+			   B.CATEGORY_NO,
+			   B.BOARD_CONTENT,
+			   A.ORIGIN_NAME,
+			   A.CHANGE_NAME,
+			   B.BOARD_TITLE,
+			   B.PRICE,
+			   B.VIEW_COUNT,
+			   B.BOARD_TYPE
+		FROM BOARD B
+		JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+		  WHERE B.STATUS = 'Y'
+		AND B.BOARD_NO = #{boardNo}
+	</select>
+	
+	<!-- 도와줄게요 날짜순 리스트 쿼리문 -->
+	<select id="helpDateCheck" resultMap="boardResult">
+  		SELECT  B.BOARD_NO,
+ 			  	B.BOARD_TITLE,
+ 			   	B.PRICE,
+ 			   	B.CREATEDATE,
+               	A.CHANGE_NAME,
+		A.FILE_PATH
+ 		FROM BOARD B
+        JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+ 		 WHERE BOARD_TYPE = 1
+ 		 AND B.STATUS = 'Y'
+		AND A.FILE_LEVEL = 1
+		AND A.STATUS = 'Y'
+        ORDER BY CREATEDATE DESC
+    </select>
+	
+	<!-- 도와줄게요 날짜순 쿼리문 -->
+	<select id="helpDateCheckCount" resultType="_int">
+		SELECT COUNT(*)
+ 		  FROM BOARD
+ 		 WHERE BOARD_TYPE = 1
+ 		AND STATUS = 'Y'
+	</select>
+	
+	<!-- 도와줄게요 조회수 리스트 -->
+<select id="helpReference" resultMap="boardResult"> 
+		SELECT  B.BOARD_NO,
+ 			  	B.BOARD_TITLE,
+ 			   	B.PRICE,
+ 			   	B.CREATEDATE,
+               	A.CHANGE_NAME,
+		A.FILE_PATH
+ 		FROM BOARD B
+        JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+ 		 WHERE BOARD_TYPE = 1
+ 		 AND B.STATUS = 'Y'
+		AND A.FILE_LEVEL = 1
+		AND A.STATUS = 'Y'
+        ORDER BY VIEW_COUNT DESC
+	</select>
+	
+	<!-- 도와줄게요 조회순 쿼리문 -->
+	<select id="helpReferenceCount" resultType="_int">
+		SELECT COUNT(*)
+ 		  FROM BOARD
+ 		 WHERE BOARD_TYPE = 1
+ 		AND STATUS = 'Y'
+	</select>
+	
+	<!-- 도와줄게요 조회수 증가 쿼리문 -->
+	<update id="helpincreaseCount">
+		UPDATE BOARD
+			SET VIEW_COUNT = VIEW_COUNT + 1
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+  	<!-- 도와줄게요 게시글 등록 쿼리문 -->
+  	<insert id="helpinsertBoard">
+  		INSERT INTO
+  			BOARD 
+  				(
+  				BOARD_NO,
+  				CATEGORY_NO,
+  				BOARD_TITLE,
+  				BOARD_CONTENT,
+  				PRICE,
+  				BOARD_TYPE,
+  				MEM_NO
+  				)
+ 
+  			VALUES 
+  				 (
+  				 SEQ_BNO.NEXTVAL,
+  				 #{categoryNo},
+  				 #{boardTitle},
+  				 #{boardContent},
+  				 #{price},
+  				 #{boardType},
+  				 #{memberNo}
+  				 )
+  	</insert>
+  	
+  	<!-- 사진 등록 쿼리문 -->
+  	<insert id="helpAttachment">
+  		INSERT INTO
+  			ATTACHMENT
+  					  (
+  					  ATT_NO,
+  					  ORIGIN_NAME,
+  					  CHANGE_NAME,
+  					  BOARD_NO
+  					  )
+  			
+  			VALUES
+  				  (
+  				  SEQ_ANO.NEXTVAL, 
+  				  #{originName},
+  				  #{changeName},
+  				  #{boardNo}			
+  				  )
+  	</insert>
+  	
+  	<!-- 도와줄게요 게시글 수정 쿼리문 -->
+  	<update id="helpUpdateBoard">
+  		UPDATE BOARD 
+	  			SET CATEGORY_NO = #{categoryNo},
+		  			BOARD_TITLE = #{boardTitle},
+		  			BOARD_CONTENT = #{boardContent},
+		  			PRICE = #{price}
+  			WHERE BOARD_NO = #{boardNo}
+  	</update>
+  	
+  	<!-- 도와줄게요 게시글 삭제 쿼리문 -->
+  	<update id="helpDeleteBoard">
+  		UPDATE BOARD
+  			SET STATUS = 'N'
+  		WHERE BOARD_NO = #{boardNo}
+  	</update>
+  	
+  	<select id="selectCommListCount" resultType="_int">
+  		SELECT  COUNT(*)
+				FROM BOARD
+		WHERE BOARD_TYPE <![CDATA[>]]>= 3
+		AND STATUS = 'Y'
+  	</select>
+  	
+  	<select id="selectCuriousListCount" resultType="_int">
+  		SELECT  COUNT(*)
+				FROM BOARD
+		WHERE BOARD_TYPE = 3
+		AND STATUS = 'Y'
+  	</select>
+  	
+  	<select id="selectMuchListCount" resultType="_int">
+  		SELECT  COUNT(*)
+				FROM BOARD
+		WHERE BOARD_TYPE = 4
+		AND STATUS = 'Y'
+  	</select>
+  	
+  	<select id="selectTogetherListCount" resultType="_int">
+  		SELECT  COUNT(*)
+				FROM BOARD
+		WHERE BOARD_TYPE = 5
+		AND STATUS = 'Y'
+  	</select>
+  	
+  	<select id="selectTogetherList" resultMap="boardResult">
+  		SELECT  B.BOARD_NO,
+				B.BOARD_TITLE,
+				B.BOARD_CONTENT,
+				B.PRICE,
+				B.BOARD_TYPE,
+				B.CREATEDATE,
+				B.STATUS,
+				B.MEM_NO,
+                M.LOCATION,
+				B.CATEGORY_NO,
+				B.LIKEY_COUNT,
+				B.VIEW_COUNT
+				FROM BOARD B
+        JOIN MEMBER M ON (B.MEM_NO = M.MEM_NO)
+		WHERE B.BOARD_TYPE = 5
+		AND B.STATUS = 'Y'
+  	</select>
+  	
+  	<select id="selectMuchList" resultMap="boardResult">
+  		SELECT  B.BOARD_NO,
+				B.BOARD_TITLE,
+				B.BOARD_CONTENT,
+				B.PRICE,
+				B.BOARD_TYPE,
+				B.CREATEDATE,
+				B.STATUS,
+				B.MEM_NO,
+                M.LOCATION,
+				B.CATEGORY_NO,
+				B.LIKEY_COUNT,
+				B.VIEW_COUNT
+				FROM BOARD B
+        JOIN MEMBER M ON (B.MEM_NO = M.MEM_NO)
+		WHERE B.BOARD_TYPE = 4
+		AND B.STATUS = 'Y'
+  	</select>
+  	
+  	<select id="selectCuriousList" resultMap="boardResult">
+  		SELECT  B.BOARD_NO,
+				B.BOARD_TITLE,
+				B.BOARD_CONTENT,
+				B.PRICE,
+				B.BOARD_TYPE,
+				B.CREATEDATE,
+				B.STATUS,
+				B.MEM_NO,
+                M.LOCATION,
+				B.CATEGORY_NO,
+				B.LIKEY_COUNT,
+				B.VIEW_COUNT
+				FROM BOARD B
+        JOIN MEMBER M ON (B.MEM_NO = M.MEM_NO)
+		WHERE B.BOARD_TYPE = 3
+		AND B.STATUS = 'Y'
+  	</select>
+  	
+  	<select id="selectCommList" resultMap="boardResult">
+		SELECT  B.BOARD_NO,
+				B.BOARD_TITLE,
+				B.BOARD_CONTENT,
+				B.PRICE,
+				B.BOARD_TYPE,
+				B.CREATEDATE,
+				B.STATUS,
+				B.MEM_NO,
+                M.LOCATION,
+				B.CATEGORY_NO,
+				B.LIKEY_COUNT,
+				B.VIEW_COUNT
+				FROM BOARD B
+        JOIN MEMBER M ON (B.MEM_NO = M.MEM_NO)
+		WHERE B.BOARD_TYPE <![CDATA[>]]>= 3
+		AND B.STATUS = 'Y'
+		ORDER BY B.CREATEDATE DESC
+  	</select>
+  	
+  	<select id="noticeList" resultMap="noticeResult">
+  		SELECT  NOTICE_NO,
+				NOTICE_TYPE,
+				NOTICE_TITLE,
+				NOTICE_CONTENT,
+				CREATEDATE
+		FROM NOTICE
+		WHERE STATUS = 'Y'
+        ORDER BY NOTICE_TYPE DESC
+  	</select>
+  	
+  	<insert id="insertNotice">
+  		INSERT INTO NOTICE (
+					NOTICE_NO,
+					NOTICE_TYPE,
+					NOTICE_TITLE,
+					NOTICE_CONTENT,
+					CREATEDATE,
+					STATUS
+            		)
+		VALUES(
+		        SEQ_NNO.NEXTVAL,
+		        #{noticeType},
+		        #{noticeTitle},
+		        #{noticeContent},
+		        SYSDATE,
+		        'Y'
+		        )
+  	</insert>
+  	
+  	<update id="deleteNotice">
+  		UPDATE NOTICE
+  			SET STATUS = 'N'
+  		WHERE NOTICE_NO = #{noticeNo}
+  	</update>
+  	
+  <select id="selectCommBoard" resultMap="boardResult">
+  		SELECT  B.BOARD_NO,
+				B.BOARD_TITLE,
+				B.BOARD_CONTENT,
+				B.PRICE,
+				B.BOARD_TYPE,
+				B.CREATEDATE,
+				B.STATUS,
+				B.MEM_NO,
+                M.MEM_NAME,
+                M.LOCATION,
+                M.FILE_PATH,
+				B.CATEGORY_NO,
+				B.LIKEY_COUNT,
+				B.VIEW_COUNT
+				FROM BOARD B
+        JOIN MEMBER M ON (B.MEM_NO = M.MEM_NO)
+		WHERE B.BOARD_NO = #{boardNo}
+		AND B.STATUS = 'Y'
+	</select>
+	
+	<!-- 도와줄게요 보드번호 가져오는 중간 쿼리 -->
+  	<select id="helpselectOne" resultMap="boardResult">
+  		SELECT B.BOARD_NO,
+		       B.CATEGORY_NO,
+		       B.BOARD_CONTENT,
+		       A.ORIGIN_NAME,
+		       A.CHANGE_NAME,
+		       B.BOARD_TITLE,
+		       B.PRICE,
+		       B.VIEW_COUNT,
+		       B.BOARD_TYPE,
+		       M.MEM_NAME,
+		       M.INTRO,
+		       M.FILE_PATH,
+		       M.SKILL_NO,
+		       M.PHONE,
+               B.LIKEY_COUNT
+		FROM BOARD B
+		INNER JOIN ATTACHMENT A ON B.BOARD_NO = A.BOARD_NO
+		INNER JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
+		WHERE B.STATUS = 'Y'
+		  AND B.BOARD_NO =#{boardNo}
+		  AND A.FILE_LEVEL = 1;
+  	</select>
+  		
+	<insert id = "insertCommboard">
+		INSERT INTO BOARD	(
+							BOARD_NO,
+							BOARD_TITLE,
+							BOARD_CONTENT,
+							BOARD_TYPE,
+							CREATEDATE,
+							STATUS,	
+							MEM_NO
+							)
+					VALUES	(
+							SEQ_BNO.NEXTVAL,
+							#{boardTitle},
+							#{boardContent},
+							#{boardType},
+							SYSDATE,
+							'Y',							
+							#{memberNo}
+							)
+	</insert>
+	
+	<select id="noticeListTwo" resultMap="noticeResult">
+		SELECT  NOTICE_NO,
+				NOTICE_TYPE,
+				NOTICE_TITLE,
+				NOTICE_CONTENT,
+				CREATEDATE        		        
+		FROM	(
+			    SELECT  NOTICE_NO,
+						NOTICE_TYPE,
+						NOTICE_TITLE,
+						NOTICE_CONTENT,
+						CREATEDATE
+				FROM NOTICE
+				WHERE STATUS = 'Y'
+		        ORDER BY CREATEDATE DESC
+		        )
+		WHERE ROWNUM <![CDATA[<]]>= 2
+	</select>
+	
+	<select id="findBoardList1" resultMap="boardResult">
+		SELECT BOARD_NO,
+		        BOARD_TITLE,
+		        BOARD_CONTENT,
+		        PRICE,
+		        CREATEDATE,
+		        MEM_NAME,
+		        CATEGORY_NAME
+		FROM (SELECT B.BOARD_NO,
+		        B.BOARD_TITLE,
+		        B.BOARD_CONTENT,
+		        B.PRICE,
+		        B.CREATEDATE,
+		        M.MEM_NAME,
+		        C.CATEGORY_NAME
+		FROM BOARD B, MEMBER M, CATEGORY C
+		WHERE (B.MEM_NO=M.MEM_NO)
+		AND (B.CATEGORY_NO=C.CATEGORY_NO)
+		AND B.BOARD_TYPE = 1
+		ORDER BY B.CREATEDATE DESC)
+		WHERE ROWNUM <![CDATA[<]]>= 2
+		AND BOARD_TITLE LIKE '%'||#{keyWord}||'%'
+	</select>
+	<select id="findBoardList2" resultMap="boardResult">
+		SELECT BOARD_NO,
+		        BOARD_TITLE,
+		        BOARD_CONTENT,
+		        PRICE,
+		        CREATEDATE,
+		        MEM_NAME,
+		        CATEGORY_NAME
+		FROM (SELECT B.BOARD_NO,
+		        B.BOARD_TITLE,
+		        B.BOARD_CONTENT,
+		        B.PRICE,
+		        B.CREATEDATE,
+		        M.MEM_NAME,
+		        C.CATEGORY_NAME
+		FROM BOARD B, MEMBER M, CATEGORY C
+		WHERE (B.MEM_NO=M.MEM_NO)
+		AND (B.CATEGORY_NO=C.CATEGORY_NO)
+		AND B.BOARD_TYPE = 2
+		ORDER BY B.CREATEDATE DESC)
+		WHERE ROWNUM <![CDATA[<]]>= 2
+		AND BOARD_TITLE LIKE '%'||#{keyWord}||'%'
+	</select>
+	<select id="findBoardList3" resultMap="boardResult">
+		SELECT BOARD_NO,
+		        BOARD_TITLE,
+		        BOARD_CONTENT,
+		        PRICE,
+		        CREATEDATE,
+		        MEM_NAME,
+		        CATEGORY_NAME,
+		        LIKEY_COUNT,
+		        VIEW_COUNT
+		FROM (SELECT B.BOARD_NO,
+		        B.BOARD_TITLE,
+		        B.BOARD_CONTENT,
+		        B.PRICE,
+		        B.CREATEDATE,
+		        M.MEM_NAME,
+		        C.CATEGORY_NAME,
+		        B.LIKEY_COUNT,
+		        B.VIEW_COUNT
+		FROM BOARD B, MEMBER M, CATEGORY C
+		WHERE (B.MEM_NO=M.MEM_NO)
+		AND (B.CATEGORY_NO=C.CATEGORY_NO)
+		AND B.BOARD_TYPE = 3
+		ORDER BY B.CREATEDATE DESC)
+		WHERE ROWNUM <![CDATA[<]]>= 2
+		AND BOARD_TITLE LIKE '%'||#{keyWord}||'%'
+	</select>
+	<select id="findBoardList4" resultMap="boardResult">
+		SELECT BOARD_NO,
+		        BOARD_TITLE,
+		        BOARD_CONTENT,
+		        PRICE,
+		        CREATEDATE,
+		        MEM_NAME,
+		        CATEGORY_NAME,
+		        LIKEY_COUNT,
+		        VIEW_COUNT
+		FROM (SELECT B.BOARD_NO,
+		        B.BOARD_TITLE,
+		        B.BOARD_CONTENT,
+		        B.PRICE,
+		        B.CREATEDATE,
+		        M.MEM_NAME,
+		        C.CATEGORY_NAME,
+		        B.LIKEY_COUNT,
+		        B.VIEW_COUNT
+		FROM BOARD B, MEMBER M, CATEGORY C
+		WHERE (B.MEM_NO=M.MEM_NO)
+		AND (B.CATEGORY_NO=C.CATEGORY_NO)
+		AND B.BOARD_TYPE = 4
+		ORDER BY B.CREATEDATE DESC)
+		WHERE ROWNUM <![CDATA[<]]>= 2
+		AND BOARD_TITLE LIKE '%'||#{keyWord}||'%'
+	</select>
+	<select id="findBoardList5" resultMap="boardResult">
+		SELECT BOARD_NO,
+		        BOARD_TITLE,
+		        BOARD_CONTENT,
+		        PRICE,
+		        CREATEDATE,
+		        MEM_NAME,
+		        CATEGORY_NAME,
+		        LIKEY_COUNT,
+		        VIEW_COUNT
+		FROM (SELECT B.BOARD_NO,
+		        B.BOARD_TITLE,
+		        B.BOARD_CONTENT,
+		        B.PRICE,
+		        B.CREATEDATE,
+		        M.MEM_NAME,
+		        C.CATEGORY_NAME,
+		        B.LIKEY_COUNT,
+		        B.VIEW_COUNT
+		FROM BOARD B, MEMBER M, CATEGORY C
+		WHERE (B.MEM_NO=M.MEM_NO)
+		AND (B.CATEGORY_NO=C.CATEGORY_NO)
+		AND B.BOARD_TYPE = 5
+		ORDER BY B.CREATEDATE DESC)
+		WHERE ROWNUM <![CDATA[<]]>= 2
+		AND BOARD_TITLE LIKE '%'||#{keyWord}||'%'
+	</select>
+	
+	<!-- 도와주세요 게시글 전체 조회 쿼리문 -->
+	<select id="helpmeselectList" resultMap="boardResult">
+		SELECT  B.BOARD_NO,
+ 			  	B.BOARD_TITLE,
+ 			   	B.PRICE,
+ 			   	A.FILE_PATH,
+               	A.CHANGE_NAME
+ 		FROM BOARD B
+        JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+ 		 WHERE B.BOARD_TYPE = 2
+         AND B.STATUS = 'Y'	
+         AND A.FILE_LEVEL = 1
+         AND A.STATUS = 'Y'
+         ORDER BY CREATEDATE DESC
+	</select>
+	
+	<!-- 도와주세요 게시글 카테고리 별 조회 -->
+	<select id="helpmeCategoryList" resultMap="boardResult">
+		SELECT  B.BOARD_NO,
+ 			  	B.BOARD_TITLE,
+ 			   	B.PRICE,
+ 			   	A.FILE_PATH,
+               	A.CHANGE_NAME
+ 		FROM BOARD B
+        JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+ 		 WHERE B.BOARD_TYPE = 2
+         AND B.STATUS = 'Y'	
+         AND A.FILE_LEVEL = 1
+         AND A.STATUS = 'Y'
+         AND B.CATEGORY_NO = #{categoryNo}
+	</select>
+	
+	
+	<!-- 도와주세요 총 갯수 조회 -->
+	<select id="seleteHelpmeListCount" resultType="_int">
+		SELECT COUNT(*)
+			FROM BOARD
+		WHERE BOARD_TYPE = 2
+		AND	STATUS = 'Y'
+	</select>
+	
+	<!-- 도와주세요 카테고리 총 개수 조회 -->
+	<select id="helpmeCategoryCount" resultType="_int">
+		SELECT COUNT(*)
+			FROM BOARD
+		WHERE BOARD_TYPE = 2
+		AND	STATUS = 'Y'
+		AND CATEGORY_NO = #{categoryNo}
+	</select>
+	
+	
+	<!-- 도와주세요 게시글 등록  -->
+	<insert id="helpmeInsertBoard">
+		INSERT INTO
+			BOARD(
+				  BOARD_NO,
+			      CATEGORY_NO,
+			      BOARD_TITLE,
+			      BOARD_CONTENT,
+			      PRICE,
+			      BOARD_TYPE,
+			      MEM_NO
+				  )
+				  
+			VALUES(
+				   SEQ_BNO.NEXTVAL,
+				   #{categoryNo},
+				   #{boardTitle},
+				   #{boardContent},
+				   #{price},
+				   #{boardType},
+				   #{memberNo}
+				  )
+	</insert>
+	
+	<!-- 도와주세요 게시글 사진 첨부 -->
+	<insert id="helpmeAttachment">
+		INSERT INTO ATTACHMENT (
+		    ATT_NO,
+		    ORIGIN_NAME,
+		    CHANGE_NAME,
+		    BOARD_NO,
+		    FILE_LEVEL
+		) VALUES (
+		    SEQ_ANO.NEXTVAL,
+		    #{originName},
+		    #{changeName},
+		    #{boardNo},
+		    #{fileLevel}
+		)
+	</insert>
+	
+	<!-- 도와주세요 보드번호 중간 쿼리문 -->
+	<select id="helpmeselectOne" resultMap="boardResult">
+  		SELECT  BOARD_NO,
+  				CATEGORY_NO,
+  				BOARD_TITLE,
+  				BOARD_CONTENT,
+  				PRICE,
+  				BOARD_TYPE,
+  				MEM_NO
+  		FROM BOARD
+  		WHERE CATEGORY_NO = #{categoryNo}
+  		AND		BOARD_TITLE = #{boardTitle}
+  		AND		BOARD_CONTENT = #{boardContent}
+		AND		PRICE = #{price}
+		AND		BOARD_TYPE = #{boardType}
+		AND		MEM_NO = #{memberNo}
+  	</select>
+  	<select id="helpmeselectOne2" resultMap="boardResult">
+  		      SELECT B.BOARD_NO,
+		       B.CATEGORY_NO,
+		       B.BOARD_CONTENT,
+		       B.BOARD_TITLE,
+		       B.PRICE,
+		       B.VIEW_COUNT,
+		       B.BOARD_TYPE,
+		       B.CREATEDATE,	       
+		       M.MEM_NO,
+		       M.MEM_NAME,
+		       M.LOCATION,
+		       M.INTRO,
+		       M.FILE_PATH,
+		       M.SKILL_NO,
+		       M.PHONE,
+               B.LIKEY_COUNT
+		FROM BOARD B
+		JOIN MEMBER M ON (B.MEM_NO = M.MEM_NO)
+		WHERE B.STATUS = 'Y'
+		  AND B.BOARD_NO = #{boardNo}
+  	</select>
+  	
+  	<!--도와줄게요 상세조회 관련 쿼리문 -->
+  	<select id="helpmeSelectBoard" resultMap="boardResult">
+  		SELECT B.BOARD_NO,
+		       B.CATEGORY_NO,
+		       B.BOARD_CONTENT,
+		       A.ORIGIN_NAME,
+		       A.CHANGE_NAME,
+		       B.BOARD_TITLE,
+		       B.PRICE,
+		       B.VIEW_COUNT,
+		       B.BOARD_TYPE,
+		       M.MEM_NAME,
+		       M.INTRO,
+		       M.FILE_PATH,
+		       M.SKILL_NO,
+		       M.PHONE,
+		       M.MEM_NO,
+		       B.LIKEY_COUNT,
+		       S.SKILL_NAME,
+		       M.MEM_EMAIL,
+		       M.LOCATION
+		FROM BOARD B
+		INNER JOIN ATTACHMENT A ON B.BOARD_NO = A.BOARD_NO
+		INNER JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
+		INNER JOIN SKILL S ON (M.SKILL_NO = S.SKILL_NO)
+		WHERE B.STATUS = 'Y'
+		  AND B.BOARD_NO = #{boardNo}
+		  AND A.FILE_LEVEL = 1
+		  AND A.STATUS = 'Y'
+  	</select>
+	
+	<!-- 도와주세요 게시글 수정 쿼리문 -->
+  	<update id="helpmeUpdateBoard">
+  		UPDATE BOARD
+	  		SET CATEGORY_NO = #{categoryNo},
+	  			BOARD_TITLE = #{boardTitle},
+	  			BOARD_CONTENT = #{boardContent},
+	  			PRICE = #{price}
+  		WHERE BOARD_NO = #{boardNo}
+  	</update>
+	
+	<!-- 도와주세요 게시글 삭제 -->
+	<update id="helpmeDeleteBoard">
+		UPDATE BOARD
+  			SET STATUS = 'N'
+  		WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+	<!-- 도와주세요 날짜순 리스트 쿼리문 -->
+	<select id="helpmeDateCheck" resultMap="boardResult">
+  		SELECT  B.BOARD_NO,
+ 			  	B.BOARD_TITLE,
+ 			   	B.PRICE,
+ 			   	B.CREATEDATE,
+               	A.CHANGE_NAME,
+		A.FILE_PATH
+ 		FROM BOARD B
+        JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+ 		 WHERE BOARD_TYPE = 2
+ 		 AND B.STATUS = 'Y'
+		AND A.FILE_LEVEL = 1
+		AND A.STATUS = 'Y'
+        ORDER BY CREATEDATE DESC
+    </select>
+	
+	<!-- 도와주세요 날짜순 쿼리문 -->
+	<select id="helpmeDateCheckCount" resultType="_int">
+		SELECT COUNT(*)
+ 		  FROM BOARD
+ 		 WHERE BOARD_TYPE = 2
+ 		AND STATUS = 'Y'
+	</select>
+	
+	<!--도와주세요 조회수 리스트 -->
+	<select id="helpmeReference" resultMap="boardResult"> 
+		SELECT  B.BOARD_NO,
+ 			  	B.BOARD_TITLE,
+ 			   	B.PRICE,
+ 			   	B.CREATEDATE,
+               	A.CHANGE_NAME,
+		A.FILE_PATH
+ 		FROM BOARD B
+        JOIN ATTACHMENT A ON (B.BOARD_NO = A.BOARD_NO)
+ 		 WHERE BOARD_TYPE = 2
+ 		 AND B.STATUS = 'Y'
+		AND A.FILE_LEVEL = 1
+		AND A.STATUS = 'Y'
+        ORDER BY VIEW_COUNT DESC
+	</select>
+	
+	<!-- 도와주세요 조회순 쿼리문 -->
+	<select id="helpmeReferenceCount" resultType="_int">
+		SELECT COUNT(*)
+ 		  FROM BOARD
+ 		 WHERE BOARD_TYPE = 2
+ 		AND STATUS = 'Y'
+	</select>
+	
+	
+	
+	<update id ="updateCommBoard">
+		UPDATE BOARD
+			SET BOARD_TITLE = #{boardTitle},
+				BOARD_CONTENT = #{boardContent}
+		WHERE BOARD_NO = #{boardNo}
+			AND STATUS = 'Y'
+	</update>
+	<update id="deleteCommBoard">
+		UPDATE BOARD
+			SET STATUS = 'N'
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+	<insert id="insertReply">
+  		INSERT INTO REPLY (
+					REPLY_NO,
+					REPLY_CONTENT,			
+					MEM_NO,
+					BOARD_NO,
+					CREATEDATE,
+					STATUS,
+					RELIKEY_COUNT		
+            		)
+		VALUES(
+		        SEQ_RNO.NEXTVAL,
+		        #{replyContent},
+		        #{memberNo},
+		        #{boardNo},
+		        SYSDATE,
+		        'Y',
+		        0
+		        )
+  	</insert>
+  	<select id="selectReplyList" resultMap="replyResult">
+		SELECT  R.REPLY_NO,
+				R.REPLY_CONTENT,
+				M.MEM_NAME,
+				R.CREATEDATE,
+				M.FILE_PATH,
+				R.RELIKEY_COUNT    		        
+		FROM	REPLY R	
+		JOIN MEMBER M ON (R.MEM_NO = M.MEM_NO) 
+		WHERE R.STATUS = 'Y'
+			AND BOARD_NO = #{boardNo}
+		ORDER BY REPLY_NO DESC
+	</select>
+  	<update id="deleteReply">
+		UPDATE REPLY
+		
+			SET STATUS = 'N'
+		WHERE REPLY_NO = #{replyNo}
+	</update>	
+	
+	
+	<update id="deleteAttachment">
+		UPDATE ATTACHMENT
+			SET STATUS = 'N'
+		WHERE BOARD_NO = #{boardNo}
+	</update>	
+	
+	
+	<select id="selectLikeyCount" resultMap="boardResult">
+		SELECT LIKEY_COUNT
+			FROM BOARD
+		WHERE BOARD_NO =#{boardNo}
+	</select>
+	<update id="updateYLikey">
+		UPDATE LIKEY
+			SET LISTATUS = 'Y'
+		WHERE BOARD_NO = #{boardNo}
+		 AND MEM_NO = #{memberNo}	 
+	</update>
+	<update id="updateNLikey">
+		UPDATE LIKEY
+			SET LISTATUS = 'N'
+		WHERE BOARD_NO = #{boardNo}
+		 AND MEM_NO = #{memberNo}
+		 AND ROWNUM &lt;= 1
+	</update>
+	<insert id="insertLikey">
+		INSERT INTO LIKEY (LIKEY_NO, BOARD_NO, MEM_NO)
+    	SELECT SEQ_LNO.NEXTVAL, #{boardNo}, #{memberNo}
+   		FROM DUAL
+    	WHERE NOT EXISTS (
+      	SELECT 1 FROM LIKEY WHERE BOARD_NO = #{boardNo} 
+      							AND MEM_NO = #{memberNo}					
+    )
+	</insert>
+	<select id ="selectLikey" resultMap="likeyResult">
+		SELECT LIKEY_NO,
+			BOARD_NO,
+			MEM_NO,
+			LISTATUS
+		FROM LIKEY
+		WHERE BOARD_NO= #{boardNo}
+		 	AND MEM_NO = #{memberNo}
+	</select>
+	<update id="updateViewCount">	
+		UPDATE BOARD
+			SET VIEW_COUNT = VIEW_COUNT + 1
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+	
+	
+	
+	
+	
+	<insert id="insertReplyLikey">
+		INSERT INTO REPLY_LIKEY (RELIKEY_NO, REPLY_NO, BOARD_NO, MEM_NO)
+	   	SELECT SEQ_RLNO.NEXTVAL, #{replyNo}, #{boardNo}, #{memberNo}
+	  		FROM DUAL
+	   	WHERE NOT EXISTS (
+	     	SELECT 1 FROM REPLY_LIKEY WHERE REPLY_NO = #{replyNo} 
+	     							AND MEM_NO = #{memberNo}					
+   	 )
+   	 </insert> 
+   	 <select id ="selectReplyLikey" resultMap="ReLikeyResult">
+		SELECT RELIKEY_NO,
+			REPLY_NO,
+			BOARD_NO,
+			MEM_NO,
+			RE_LISTATUS
+		FROM REPLY_LIKEY
+		WHERE REPLY_NO= #{replyNo}
+		 	AND MEM_NO = #{memberNo}
+	</select>
+	<update id="updateYReplyLikey">
+		UPDATE REPLY_LIKEY
+			SET RE_LISTATUS = 'Y'
+		WHERE REPLY_NO = #{replyNo}
+		 AND MEM_NO = #{memberNo}	 
+	</update>
+	<select id="selectReplyLikeyCount" resultMap="replyResult">
+		SELECT RELIKEY_COUNT
+			FROM REPLY
+		WHERE REPLY_NO =#{replyNo}
+	</select>
+	<update id="updateNReplyLikey">
+		UPDATE REPLY_LIKEY
+			SET RE_LISTATUS = 'N'
+		WHERE REPLY_NO = #{replyNo}
+		 AND MEM_NO = #{memberNo}
+		 AND ROWNUM &lt;= 1
+	</update>
+	
+	<select id="selectCategoryList" resultMap="categoryResult">
+		SELECT  CATEGORY_NO,
+				CATEGORY_NAME
+		FROM CATEGORY
+	</select>
+	
+	<select id="selectCategoryNo" resultType="_int">
+		SELECT CATEGORY_NO
+			FROM CATEGORY
+	</select>
+	
+	<!-- 신고하기 목록 불러오는 쿼리문 -->
+	<select id="selectReport" resultMap="reportResult">
+		SELECT R.REPORT_NO,
+			   R.REPORT_TITLE,
+			   R.REPORT_CONTENT,
+			   R.CREATEDATE,
+			   R.MEM_NO,
+			   M.MEM_NAME,
+			   R.ADMIN_COMENT,
+        	   R.STATUS 
+		FROM REPORT R
+		 JOIN MEMBER M ON (R.MEM_NO = M.MEM_NO)
+		 WHERE R.STATUS = 'Y'
+	</select>
+	
+	<select id="seletReportCount" resultType="_int">
+		SELECT COUNT(*)
+ 		  FROM REPORT
+	</select>
+	<select id="helpmeAttachmentList" resultMap="attachmentResult">
+		SELECT ATT_NO,
+		        ORIGIN_NAME,
+		        CHANGE_NAME,
+		        BOARD_NO
+		FROM ATTACHMENT
+		WHERE BOARD_NO = #{boardNo}
+			 AND FILE_LEVEL = 2
+			 AND STATUS = 'Y'
+	</select>
+	<!-- 신고하기 adminComent -->
+	<update id="reportUpdate">
+		UPDATE REPORT
+		 SET ADMIN_COMENT = #{adminComent},
+		 	STATUS = 'N'
+		 WHERE REPORT_NO = #{reportNo}
+		 AND STATUS = 'Y'
+	</update>
+	
+	<select id="selectEndReport" resultMap="reportResult">
+		SELECT R.REPORT_NO,
+			   R.REPORT_TITLE,
+			   R.REPORT_CONTENT,
+			   R.CREATEDATE,
+			   R.MEM_NO,
+			   M.MEM_NAME,
+			   R.ADMIN_COMENT,
+        	   R.STATUS 
+		FROM REPORT R
+		 JOIN MEMBER M ON (R.MEM_NO = M.MEM_NO)
+		 WHERE R.STATUS = 'N'		
+	</select>
+	
+  </mapper>

@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="memberMapper">
+	<resultMap type="Member" id="memberResult">
+		<result column="MEM_NO" property="memberNo"/>
+		<result column="MEM_EMAIL" property="memberEmail"/>
+		<result column="MEM_PWD" property="memberPwd"/>
+		<result column="MEM_NAME" property="memberName"/>
+		<result column="MEM_CONCERN" property="memberConcern"/>
+		<result column="PHONE" property="phone"/>
+		<result column="LOCATION" property="location"/>
+		<result column="STATUS" property="status"/>
+		<result column="MEM_GEN" property="memberGender"/>
+		<result column="POINT" property="point"/>
+		<result column="FILE_PATH" property="filePath"/>
+		<result column="ACCOUNT" property="account"/>
+		<result column="INTRO" property="intro"/>
+		<result column="ENROLL_DATE" property="enrollDate"/>
+		<result column="SKILL_NO" property="skillNo"/>
+		<result column="SKILL_NAME" property="skillName"/>
+	</resultMap>
+	
+	<resultMap type="Skill" id="skillResult">
+		<result column="SKILL_NO" property="skillNo"/>
+		<result column="SKILL_NAME" property="skillName"/>
+	</resultMap>
+	
+	<resultMap type="Schedule" id="scheduleResult">
+		<result column="SCHE_NO" property="scheNo"/>
+		<result column="SCHE_TITLE" property="scheTitle"/>		
+		<result column="SCHE_CONTENT" property="scheContent"/>
+		<result column="BOARD_NO" property="boardNo"/>		
+		<result column="FROM_MNO" property="fromMemberNo"/>
+		<result column="TO_MNO" property="toMemberNo"/>
+		<result column="CATEGORY_NO" property="categoryNo"/>
+		<result column="STATUS" property="status"/>
+		<result column="CREATEDATE" property="createDate"/>
+		<result column="LOCATION" property="location"/>
+		<result column="MEM_NAME" property="memberName"/>
+		<result column="CATEGORY_NAME" property="categoryName"/>
+		<result column="PHONE" property="phone"/>
+	</resultMap>
+	
+	<resultMap type="EmailCheck" id="emailCheckResult">
+		<result column="AUTH_NO" property="authNo"/>
+		<result column="AUTH_EMAIL" property="authEmail"/>
+		<result column="AUTH_RANDOM" property="authRandom"/>
+		<result column="CREATEDATE" property="createDate"/>
+	</resultMap>
+	
+	<resultMap type="Pay" id="payResult">
+		<result column="PAY_NO" property="payNo"/>
+		<result column="TID" property="tid"/>
+		<result column="PRICE" property="price"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MEM_NO" property="memberNo"/>
+	</resultMap>
+	
+	<resultMap type="Report" id="reportResult">
+  		<result column="REPORT_NO" property="reportNo" />
+  		<result column="REPORT_TITLE" property="reportTitle" />
+  		<result column="REPORT_CONTENT" property="reportContent" />
+  		<result column="CREATEDATE" property="createDate" />
+  		<result column="MEM_NO" property="memberNo" />
+  		<result column="ADMIN_COMENT" property="adminComent" />		
+  		<result column="STATUS" property="status" />
+  	</resultMap>
+
+	<!-- 회원가입 -->
+	<insert id = "insertMember">
+		INSERT INTO MEMBER(
+			MEM_NO,
+			MEM_EMAIL,
+			MEM_PWD,
+			MEM_NAME,
+			PHONE,
+			MEM_GEN,
+			MEM_CONCERN,
+			SKILL_NO
+		)
+		VALUES(
+			SEQ_MNO.NEXTVAL,
+			#{memberEmail},
+			#{memberPwd},
+			#{memberName},
+			#{phone},
+			#{memberGender},
+			#{memberConcern},
+			333300
+		)
+	</insert>
+	<!-- 아이디 중복체크 -->
+	<select id="emailCheck" resultMap="memberResult">
+		SELECT MEM_EMAIL,
+			MEM_PWD,
+			MEM_NAME
+		FROM MEMBER
+		WHERE MEM_EMAIL = #{memberEmail}
+			AND STATUS = 'Y'
+	</select>
+	
+	<!-- 회원가입시 이메일 중복확인 -->
+	<select id="emailYNCheck" resultType="_int">
+		SELECT COUNT(*)
+			FROM MEMBER
+		WHERE MEM_EMAIL = #{memberEmail}
+	</select>
+	
+	<!-- 이메일이랑 휴대폰 번호 체크 -->
+	<select id="emailPhoneCheck" resultMap="memberResult">
+		SELECT MEM_EMAIL,
+			MEM_PWD,
+			MEM_NAME
+		FROM MEMBER
+		WHERE MEM_EMAIL = #{memberEmail}
+			AND PHONE = #{phone}
+			AND STATUS = 'Y'
+	</select>
+	
+	<!-- 로그인 -->
+	<select id="loginMember" resultMap="memberResult">
+		SELECT M.MEM_NO,
+			M.MEM_EMAIL,
+			M.MEM_PWD,
+			M.MEM_NAME,
+			M.MEM_CONCERN,
+			M.PHONE,
+			M.LOCATION,
+			M.STATUS,
+			M.MEM_GEN,
+			M.POINT,
+			M.FILE_PATH,
+			M.ACCOUNT,
+			M.INTRO,
+			S.SKILL_NO,
+			S.SKILL_NAME
+		FROM MEMBER M
+		JOIN SKILL S ON (M.SKILL_NO = S.SKILL_NO)
+		WHERE MEM_EMAIL = #{memberEmail}
+		AND STATUS = 'Y'
+	</select>
+	
+	<!-- 회원정보 불러오는 쿼리 -->
+	<select id="userInfo" resultMap="memberResult">
+		SELECT  M.MEM_NO,
+				M.MEM_EMAIL,
+				M.MEM_PWD,
+				M.MEM_NAME,
+				M.MEM_CONCERN,
+				M.PHONE,
+				M.LOCATION,
+				M.STATUS,
+				M.MEM_GEN,
+				M.POINT,
+				M.FILE_PATH,
+				M.ACCOUNT,
+				M.INTRO,
+				M.ENROLL_DATE,
+				M.SKILL_NO,
+				S.SKILL_NAME
+		FROM MEMBER M
+		JOIN SKILL S ON (M.SKILL_NO = S.SKILL_NO)
+		WHERE MEM_NO = #{memberNo}
+		AND STATUS = 'Y'
+	</select>
+	
+	<!-- 회원정보를 수정하는 쿼리 -->
+	<update id="updateUserInfo">
+		UPDATE MEMBER 
+		SET MEM_NAME = #{memberName},
+				MEM_CONCERN = #{memberConcern},
+				POINT = #{point}
+		WHERE MEM_NO = #{memberNo}
+	</update>
+	
+	<!-- 이메일로 비밀번호 변경시 업데이트 -->
+	<update id="updateUserPwd">
+		UPDATE MEMBER 
+		SET MEM_PWD = #{memberPwd}
+		WHERE MEM_EMAIL = #{memberEmail}
+	</update>
+	
+	<!-- 멤버번호로 구별 / 전문가페이지에서 자기소개 수정하는 쿼리 -->
+	<update id="updateProInfo">
+		UPDATE MEMBER SET 
+				INTRO = #{intro},
+				MEM_NAME = #{memberName},
+				LOCATION = #{location},
+				SKILL_NO = #{skillNo}
+		WHERE MEM_NO = #{memberNo}
+	</update>
+	
+	<!--비밀번호 수정 쿼리 -->
+	<update id="updatePwd">
+		UPDATE MEMBER
+		SET MEM_PWD = #{memberPwd}
+		WHERE MEM_NO = #{memberNo}
+	</update>
+	
+	<!-- 회원탈퇴 쿼리 -->
+	<update id="deleteMember">
+		UPDATE MEMBER
+		SET STATUS = 'N',
+			MEM_EMAIL = null
+		WHERE MEM_NO = #{memberNo}
+		AND MEM_EMAIL = #{memberEmail}
+	</update>
+	
+	<!-- 일정 관리 리스트 쿼리 -->
+	<select id="scheduleList" resultMap="scheduleResult">
+		SELECT  S.SCHE_NO,
+				S.SCHE_TITLE,
+				S.SCHE_CONTENT,
+				B.BOARD_NO,
+				M.MEM_NAME,
+				C.CATEGORY_NAME,
+				S.STATUS,
+				S.CREATEDATE,
+				S.LOCATION,
+				M.PHONE
+		FROM SCHEDULE S, MEMBER M, BOARD B, CATEGORY C
+		WHERE S.STATUS = 'Y'
+		AND (B.BOARD_NO = S.BOARD_NO)
+		AND (M.MEM_NO = S.FROM_MNO)
+		AND (C.CATEGORY_NO = S.CATEGORY_NO)
+        AND S.TO_MNO = #{toMemberNo}
+	</select>
+	
+	<select id="scheduleSendList" resultMap="scheduleResult">
+		SELECT  S.SCHE_NO,
+				S.SCHE_TITLE,
+				S.SCHE_CONTENT,
+				B.BOARD_NO,
+				M.MEM_NAME,
+				C.CATEGORY_NAME,
+				S.STATUS,
+				S.CREATEDATE,
+				S.LOCATION
+		FROM SCHEDULE S, MEMBER M, BOARD B, CATEGORY C
+		WHERE S.STATUS = 'Y'
+		AND (B.BOARD_NO = S.BOARD_NO)
+		AND (M.MEM_NO = S.TO_MNO)
+		AND (C.CATEGORY_NO = S.CATEGORY_NO)
+        AND S.FROM_MNO = #{toMemberNo}
+	</select>
+	
+	<update id="updateUserImg">
+		UPDATE MEMBER
+		SET FILE_PATH = #{filePath}
+		WHERE MEM_NO = #{memberNo}
+		AND STATUS = 'Y'
+	</update>
+	
+
+	<update id="requestCancel">
+		UPDATE SCHEDULE
+		SET STATUS = 'N'
+		WHERE SCHE_NO = #{scheNo}
+	</update>
+
+		<!-- 회원정보 불러오는 쿼리 -->
+	<select id="viewAllMem" resultMap="memberResult">
+		SELECT  MEM_NO,
+				MEM_EMAIL,
+				MEM_PWD,
+				MEM_NAME,
+				MEM_CONCERN,
+				PHONE,
+				LOCATION,
+				STATUS,
+				MEM_GEN,
+				POINT,
+				FILE_PATH,
+				ACCOUNT,
+				INTRO,
+				ENROLL_DATE
+		FROM MEMBER
+	</select>
+	<select id="searchMem" resultMap="memberResult">
+		SELECT  MEM_NO,
+				MEM_EMAIL,
+				MEM_NAME,
+				PHONE,
+				LOCATION,
+				STATUS,
+				MEM_GEN,
+				POINT,
+				FILE_PATH,
+				ACCOUNT,
+				INTRO,
+				ENROLL_DATE
+		FROM MEMBER
+    	WHERE MEM_NAME LIKE '%' || #{searchText} || '%'
+		OR MEM_EMAIL LIKE '%' || #{searchText} || '%'
+		OR MEM_NO LIKE '%' || #{searchText} || '%'
+		OR ENROLL_DATE LIKE '%' || #{searchText} || '%'
+	</select>
+	<update id="adminDeleteMem">	   
+	        UPDATE MEMBER
+	        SET STATUS = 'N'
+	        WHERE MEM_NO = #{memberNo}
+	</update>
+	
+	<insert id="insertEmailRandomNo">
+		INSERT INTO AUTHENTICATE
+					(
+		            AUTH_NO,
+		            AUTH_EMAIL,
+		            AUTH_RANDOM,
+		            CREATEDATE
+					)
+            VALUES
+            		(
+		            SEQ_AUNO.NEXTVAL,
+		            #{authEmail},
+		            #{authRandom},
+		            SYSDATE
+		            )
+	</insert>
+	
+	<select id="checkRandomNo" resultMap="emailCheckResult">
+		SELECT  AUTH_NO,
+			    AUTH_EMAIL,
+			    AUTH_RANDOM,
+			    CREATEDATE
+		FROM(		
+				SELECT
+				    AUTH_NO,
+				    AUTH_EMAIL,
+				    AUTH_RANDOM,
+				    CREATEDATE
+				FROM
+				    AUTHENTICATE
+				WHERE
+				    AUTH_EMAIL = #{authEmail}
+				    AND CREATEDATE BETWEEN SYSDATE - INTERVAL '3' MINUTE AND SYSDATE
+				ORDER BY
+				    CREATEDATE DESC)
+		WHERE ROWNUM = 1
+	</select>
+	
+	<select id="checkCreateDate" resultMap="emailCheckResult">
+		SELECT AUTH_NO,
+			    AUTH_EMAIL,
+			    AUTH_RANDOM,
+			    CREATEDATE
+		FROM AUTHENTICATE
+		WHERE CREATEDATE BETWEEN SYSDATE - 3/24/60 AND SYSDATE
+		AND AUTH_EMAIL = #{authEmail}
+		AND AUTH_RANDOM = #{checkNo}
+	</select>
+	
+	<!-- 네이버아이디 회원가입여부 -->
+	<select id="naverIdcheck" resultMap="memberResult">
+		SELECT MEM_NO,
+			MEM_EMAIL,
+			MEM_PWD,
+			MEM_NAME,
+			MEM_CONCERN,
+			PHONE,
+			LOCATION,
+			STATUS,
+			MEM_GEN,
+			POINT,
+			FILE_PATH,
+			ACCOUNT,
+			INTRO
+		FROM MEMBER
+		WHERE MEM_EMAIL = #{memberEmail}
+		AND STATUS = 'Y'
+	</select>
+	
+	<!-- 네이버아이디회원가입 -->
+	<insert id="naverEnrollInsert">
+		INSERT INTO MEMBER(
+			MEM_NO,
+			MEM_EMAIL,
+			MEM_PWD,
+			MEM_NAME,
+			PHONE,
+			MEM_GEN,
+			MEM_CONCERN
+		)
+		VALUES(
+			SEQ_MNO.NEXTVAL,
+			#{memberEmail},
+			#{memberPwd},
+			#{memberName},
+			#{phone},
+			#{memberGender},
+			#{memberConcern}
+		)
+		
+	</insert>
+	
+	<!-- 결제기록테이블 인서트 -->
+	<insert id="insertPay">
+		INSERT INTO PAY 
+					(
+					PAY_NO,
+					PRICE,
+					CREATE_DATE,
+					MEM_NO
+					)
+        VALUES(		
+        			SEQ_PAY_NO.NEXTVAL,
+					#{price},
+					SYSDATE,
+					#{memberNo}
+        )
+	</insert>
+	
+	<!-- 멤버 컬럼에 잔액추가 -->
+	<update id="insertAmount">
+		UPDATE MEMBER 
+		SET ACCOUNT = ACCOUNT + #{price}
+		WHERE MEM_NO = #{memberNo}
+	</update>
+	
+	<!-- 탈퇴사유기록테이블 insert -->
+	<insert id="insertReason">
+		INSERT INTO REASON
+				(
+				MEM_NO,
+				REA_CONTENT,
+				RETIRE_DATE
+				)
+		VALUES(
+				#{memberNo},
+				#{reaContent},
+				SYSDATE
+				)
+	</insert>
+	
+	<update id="updatePhone">
+		UPDATE MEMBER
+		SET PHONE = #{phone}
+		WHERE MEM_NO = #{memberNo}
+	</update>
+	
+	<select id="skillInfo" resultMap="skillResult">
+		SELECT  SKILL_NO,
+				SKILL_NAME
+		FROM SKILL
+	</select>
+	
+	<select id="myReportList" resultMap="reportResult">
+		SELECT  R.REPORT_NO,
+		        R.REPORT_TITLE,
+		        R.REPORT_CONTENT,
+		        R.CREATEDATE,
+		        R.MEM_NO,
+		        M.MEM_NAME,
+		        R.ADMIN_COMENT,
+		        R.STATUS
+		FROM REPORT R
+		JOIN MEMBER M ON(R.MEM_NO = M.MEM_NO)
+		WHERE R.MEM_NO = #{memberNo}
+		AND R.STATUS = 'Y'
+		ORDER BY R.CREATEDATE DESC
+	</select>
+	
+	<select id="endMyReportList" resultMap="reportResult">
+				SELECT  R.REPORT_NO,
+		        R.REPORT_TITLE,
+		        R.REPORT_CONTENT,
+		        R.CREATEDATE,
+		        R.MEM_NO,
+		        M.MEM_NAME,
+		        R.ADMIN_COMENT,
+		        R.STATUS
+		FROM REPORT R
+		JOIN MEMBER M ON(R.MEM_NO = M.MEM_NO)
+		WHERE R.MEM_NO = #{memberNo}
+		AND R.STATUS = 'N'
+		ORDER BY R.CREATEDATE DESC
+	</select>
+	
+	<insert id="insertReport">
+		INSERT INTO REPORT(
+		    REPORT_NO,
+		    REPORT_TITLE,
+		    REPORT_CONTENT,
+		    CREATEDATE,
+		    MEM_NO,
+		    ADMIN_COMENT,
+		    STATUS  
+		)
+		VALUES(
+		    SEQ_RPNO.NEXTVAL,
+		    #{reportTitle},
+		    #{reportContent},
+		    SYSDATE,
+		    #{memberNo},
+		    NULL,
+		    'Y'
+		)
+	</insert>
+</mapper>
