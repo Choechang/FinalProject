@@ -191,7 +191,8 @@ a:hover:after { transform: scaleX(1); }
 
 .pagination{
     justify-content: center;
-    margin-top: 30px;
+    /*  margin-top: 30px;*/
+      
 }
 .arrow-img{
     position: absolute;
