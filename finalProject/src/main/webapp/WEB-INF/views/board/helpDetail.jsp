@@ -211,7 +211,8 @@
 
     .photo{
         width: 550px;
-        height: max-content;
+        /* height: max-content; */
+        height: 600px;
         background-color: white;
         align-items: center;
         padding: 20px;
@@ -219,7 +220,9 @@
     }
     .big-photo{
         width: 510px;
-        margin-bottom: 20px;
+        /* margin-bottom: 20px;
+         */
+         height: 400px;
         border: 1px solid rgba(96, 96, 96, 0.4);
     }
 
@@ -274,7 +277,7 @@
     .slider-wrapper .image-list .image-item{
         width: 200px;
         height: 120px;
-        object-fit: cover;
+        /* object-fit: cover; */
         border: 1px solid rgba(96, 96, 96, 0.4);
     }
 
@@ -326,7 +329,8 @@
     */
     .content{
         width: 550px;
-        height: max-content;
+        /* height: max-content; */
+        height: 600px;
         background-color: white;
         margin: 0 auto;
         padding: 30px;
@@ -675,7 +679,8 @@
                 </div>
             </div>
             <div class = "content-detail">
-            <pre style="width: 100%; height: 100%;">
+            <pre style="width: 100%; height: 100%; padding-left: 15px;
+            padding-top: 10px;">
 ${b.boardContent }
             </pre>
             </div>
@@ -688,48 +693,48 @@ ${b.boardContent }
         </div>
         <div class="modal" id="userModal" style="background: top;" >
             <div class="modal-dialog">
-                 <div class="modal-content" style="height: 100%;  margin-top: 180px;">
+                <div class="modal-content" style="height: 100%;  margin-top: 180px;">
                     <div class="modal-body" >                 
                       
                         <div style="justify-content: center;
                             display: flex;">
-                        <img class ="modal-user-img" src="${b.filePath}" alt="유저사진" style="height: 120px; width: 120px; border-radius: 30%;">
-                    </div>
-                    <br>
-                    
-                    <h2 class="modal-user-name" style="text-align: center; font-weight: bold; margin: 0 auto;">${b.memberName}</h2>
-                    <br>
-                    
-                    <div class="l-text" style="font-weight: bold;">
-                        Email
-                    </div>                      
-                    <input class="modal-email-input" name="memberEmail" type="text" style="width: 100%;" value="${b.memberEmail}" readonly>
-                    <br>
-                    
-                    <div class="l-text" style="font-weight: bold;">
-                        활동지역
-                    </div>                      
-                    <input class="modal-location-input" name="location" type="text" style="width: 100%;" value="${b.location}" readonly>
-                    <br>
-                    
-                    <div class="l-text" style="font-weight: bold;">
-                        전문가 정보
-                    </div>                      
-                    <input class="modal-skill-input" name="skillName" type="text" style="width: 100%;" value="${b.skillName}" readonly>
-                    <br>
-                    
-                    <div class="l-text" style="font-weight: bold;">
-                        전문가 소개
-                    </div>                      
-                    <input class="modal-introduce-input" name="intro" type="text" style="width: 100%;" value="${b.intro}" readonly>
-                    
-                    <hr>
+                            <img class ="modal-user-img" src="${b.filePath}" alt="유저사진" style="height: 120px; width: 120px; border-radius: 30%;">
+                        </div>
+                        <br>
+                        
+                        <h2 class="modal-user-name" style="text-align: center; font-weight: bold; margin: 0 auto;">${b.memberName}</h2>
+                        <br>
+                        
+                        <div class="l-text" style="font-weight: bold;">
+                            Email
+                        </div>                      
+                        <input class="modal-email-input" name="memberEmail" type="text" style="width: 100%;" value="${b.memberEmail}" readonly>
+                        <br>
+                        
+                        <div class="l-text" style="font-weight: bold;">
+                            활동지역
+                        </div>                      
+                        <input class="modal-location-input" name="location" type="text" style="width: 100%;" value="${b.location}" readonly>
+                        <br>
+                        
+                        <div class="l-text" style="font-weight: bold;">
+                            전문가 정보
+                        </div>                      
+                        <input class="modal-skill-input" name="skillName" type="text" style="width: 100%;" value="${b.skillName}" readonly>
+                        <br>
+                        
+                        <div class="l-text" style="font-weight: bold;">
+                            전문가 소개
+                        </div>                      
+                        <input class="modal-introduce-input" name="intro" type="text" style="width: 100%;" value="${b.intro}" readonly>
+                        
+                        <hr>
             
                
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 <%@ include file="../common/footer.jsp" %>
 
